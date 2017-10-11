@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grpahs
 {
-    class GraphD : IGraph
+    public class GraphD : IGraph
     {
         class Vertex
         {

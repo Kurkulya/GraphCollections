@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpahs", "Grpahs\Grpahs.csproj", "{CEA1C42B-4FD0-4FAE-AC90-047F64407B1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphTests", "GraphTests\GraphTests.csproj", "{21DFA361-EC7B-4CE3-9388-D2AABEFE7DF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CEA1C42B-4FD0-4FAE-AC90-047F64407B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEA1C42B-4FD0-4FAE-AC90-047F64407B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEA1C42B-4FD0-4FAE-AC90-047F64407B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DFA361-EC7B-4CE3-9388-D2AABEFE7DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DFA361-EC7B-4CE3-9388-D2AABEFE7DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DFA361-EC7B-4CE3-9388-D2AABEFE7DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DFA361-EC7B-4CE3-9388-D2AABEFE7DF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
