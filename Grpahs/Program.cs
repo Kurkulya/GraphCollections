@@ -17,11 +17,11 @@ namespace Grpahs
             graph.AddVertex("E");
             graph.AddVertex("S");
             graph.AddEdge("K", "F", 1);
-            graph.AddEdge("D", "F", 2);
-            graph.AddEdge("E", "D", 3);
-            graph.AddEdge("S", "E", 4);
+            graph.AddEdge("F", "D", 2);
+            graph.AddEdge("D", "E", 3);
+            graph.AddEdge("E", "S", 4);
             graph.AddEdge("S", "K", 5);
-            graph.DelEdge("S", "K");
+            graph.DelVertex("D");
             graph.Print();
         }
     }

@@ -28,7 +28,7 @@ namespace Grpahs
                 {
                     Edge edge = new Edge(length);
                     list.AddLink(first, second, edge);
-                    list.AddLink(second, first, edge);
+                    list.AddLink(second, first, edge);//oriented
                 }
             }
             else
@@ -56,7 +56,7 @@ namespace Grpahs
                     delLength = list.GetLink(first, second).Edge.Length;
 
                     list.DelLink(first, second);
-                    list.DelLink(second, first);
+                    list.DelLink(second, first); //oriented
 
                     return delLength;
                 }
@@ -81,11 +81,27 @@ namespace Grpahs
                 int len = needDel.Count;
                 for (int i =0;i < len; i++)
                 {
-                    list.DelLink(needDel.First().Vertex, del);
+                    list.DelLink(needDel.First().Vertex, del); //oriented
                     list.DelLink(del, needDel.First().Vertex);
                 }
-
                 list.Del(del);
+                #region Oriented
+                /*
+                foreach (Vertex vertex in list.GetVertexList())
+                {
+                    List<Link> delList = list.GetLinks(vertex);
+                    int length = needDel.Count;
+                    for (int i = 0; i < len; i++)
+                    {
+                        if (delList[i].Vertex == del)
+                        {
+                            list.DelLink(vertex, del);
+                        }
+                    }
+                    Console.WriteLine();
+                }
+                */
+                #endregion
             }
             else
             {
@@ -136,7 +152,7 @@ namespace Grpahs
                 if (list.IsLinked(first, second) == true)
                 {
                     list.GetLink(first, second).Edge.Length = length;
-                    list.GetLink(second, first).Edge.Length = length;
+                    list.GetLink(second, first).Edge.Length = length; //oriented
                 }
                 else
                 {
