@@ -131,13 +131,26 @@ namespace Grpahs
 
         public void Print()
         {
-            foreach(Vertex vertex in list.GetVertexList())
+            List<Vertex> visited = new List<Vertex>();
+            Queue<Vertex> queue = new Queue<Vertex>();
+            Vertex start = list.GetVertexList().First();
+
+            visited.Add(start);
+            queue.Enqueue(start);
+            while (queue.Count != 0)
             {
-                Console.Write(vertex.Name + ": ");
-                foreach(Link link in list.GetLinks(vertex))
+                Vertex temp = queue.Dequeue();
+
+                Console.Write(temp.Name + ": ");
+
+                foreach (Link link in list.GetLinks(temp))
                 {
                     Console.Write($"{link.Edge.Length} to {link.Vertex.Name}, ");
+
+                    if (visited.Contains(link.Vertex) == false)
+                        queue.Enqueue(link.Vertex);
                 }
+                visited.Add(temp);
                 Console.WriteLine();
             }
         }

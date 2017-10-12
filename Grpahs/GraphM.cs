@@ -100,17 +100,30 @@ namespace Grpahs
 
         public void Print()
         {
-            foreach(Vertex vertex in matrix.GetVertexList())
+            List<Vertex> visited = new List<Vertex>();
+            Queue<Vertex> queue = new Queue<Vertex>();
+            Vertex start = matrix.GetVertexList().First();
+
+            visited.Add(start);
+            queue.Enqueue(start);
+            while (queue.Count != 0)
             {
-                Console.Write(vertex.Name + ": ");
-                foreach(Vertex link in matrix.GetVertexList())
+                Vertex temp = queue.Dequeue();
+
+                Console.Write(temp.Name + ": ");
+
+                foreach (Vertex link in matrix.GetLinks(temp))
                 {
-                    if(matrix[vertex, link] != null)
-                        Console.Write($"{matrix[vertex, link].Length} to {link.Name}, ");
+                    Console.Write($"{matrix[temp, link].Length} to {link.Name}, ");
+
+                    if (visited.Contains(link) == false)
+                        queue.Enqueue(link);
                 }
+                visited.Add(temp);
                 Console.WriteLine();
             }
         }
+
 
         public void SetEdge(string name1, string name2, int length)
         {

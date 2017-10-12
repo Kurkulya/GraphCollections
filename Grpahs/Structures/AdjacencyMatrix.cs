@@ -75,6 +75,17 @@ namespace Grpahs.Structures
             return vertexIndex.Keys.ToList();
         }
 
+        public List<Vertex> GetLinks(Vertex fromVertex)
+        {
+            List<Vertex> links = new List<Vertex>();
+            for (int i = 0; i < count; i++)
+            {
+                if (matrix[vertexIndex[fromVertex], i] != null)
+                    links.Add(vertexIndex.Keys.ElementAt(i));
+            }
+            return links;
+        }
+
         public void Add(Vertex vertex)
         {
             vertexIndex.Add(vertex, count);
