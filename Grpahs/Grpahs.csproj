@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Exceptions\EdgeDoesNotExistException.cs" />
     <Compile Include="Exceptions\VertexDoesNotExistException.cs" />
+    <Compile Include="GraphM.cs" />
+    <Compile Include="Structures\AdjacencyMatrix.cs" />
     <Compile Include="VertexEdge\Edge.cs" />
     <Compile Include="GraphD.cs" />
     <Compile Include="IGraph.cs" />

@@ -6,6 +6,7 @@ using Grpahs.Exceptions;
 namespace GraphTests
 {
     [TestFixture(typeof(GraphD))]
+    [TestFixture(typeof(GraphM))]
     public class Tests<TGraph> where TGraph : IGraph, new()
     {
         IGraph graph;
