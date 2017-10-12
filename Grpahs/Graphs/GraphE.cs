@@ -9,13 +9,13 @@ using static Grpahs.Structures.AdjacencyList;
 
 namespace Grpahs
 {
-    public class GraphD : IGraph
+    public class GraphE : IGraph
     {
-        AdjacencyList list = new AdjacencyList();
+        EdgeList list = new EdgeList();
 
-        public int Vertexes => list.GetVertexList().Count;
+        public int Vertexes => list.Vertexes;
 
-        public int Edges => list.NumOfEdges();
+        public int Edges => list.Edges;
 
         public void AddEdge(string name1, string name2, int length)
         {
@@ -24,11 +24,10 @@ namespace Grpahs
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
-                if (list.IsLinked(first, second) == false)
+                if (list.IsLinked(first,second) == false)
                 {
                     Edge edge = new Edge(length);
                     list.AddLink(first, second, edge);
-                    list.AddLink(second, first, edge);//oriented
                 }
             }
             else
@@ -52,11 +51,10 @@ namespace Grpahs
                 Vertex second = list.GetVertex(name2);
 
                 if (list.IsLinked(first, second) == true)
-                {                   
-                    delLength = list.GetLink(first, second).Edge.Length;
+                {
+                    delLength = list.GetLink(first, second).Length;
 
                     list.DelLink(first, second);
-                    list.DelLink(second, first); //oriented
 
                     return delLength;
                 }
@@ -75,51 +73,20 @@ namespace Grpahs
         public void DelVertex(string name)
         {
             if (list.Contains(name) == true)
-            {
-                Vertex del = list.GetVertex(name);
-                List<Link> needDel = list.GetLinks(del);
-                int len = needDel.Count;
-                for (int i =0;i < len; i++)
-                {
-                    list.DelLink(needDel.First().Vertex, del); //oriented
-                    list.DelLink(del, needDel.First().Vertex);
-                }
-                list.Del(del);
-                #region Oriented
-                /*
-                foreach (Vertex vertex in list.GetVertexList())
-                {
-                    List<Link> delList = list.GetLinks(vertex);
-                    int length = needDel.Count;
-                    for (int i = 0; i < len; i++)
-                    {
-                        if (delList[i].Vertex == del)
-                        {
-                            list.DelLink(vertex, del);
-                        }
-                    }
-                    Console.WriteLine();
-                }
-                */
-                #endregion
-            }
+                list.Del(list.GetVertex(name));
             else
-            {
                 throw new VertexDoesNotExistException();
-            }
         }
 
         public int GetEdge(string name1, string name2)
         {
-            int length = 0;
-
             if (list.Contains(name1) && list.Contains(name2))
             {
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
                 if (list.IsLinked(first, second) == true)
-                    return length = list.GetLink(first, second).Edge.Length;
+                    return list.GetLink(first, second).Length;
                 else
                     throw new EdgeDoesNotExistException();
             }
@@ -143,17 +110,21 @@ namespace Grpahs
 
                 Console.Write(temp.Name + ": ");
 
-                foreach (Link link in list.GetLinks(temp))
+                foreach (Vertex link in list.GetLinks(temp))
                 {
-                    Console.Write($"{link.Edge.Length} to {link.Vertex.Name}, ");
+                    Console.Write($"{list.GetLink(temp, link).Length} to {link.Name}, ");
 
-                    if (visited.Contains(link.Vertex) == false)
-                        queue.Enqueue(link.Vertex);
-                }
+                    if (visited.Contains(link) == false)
+                    { 
+                        visited.Add(link);
+                        queue.Enqueue(link);
+                    }
+            }
                 visited.Add(temp);
                 Console.WriteLine();
             }
         }
+
 
         public void SetEdge(string name1, string name2, int length)
         {
@@ -164,8 +135,7 @@ namespace Grpahs
 
                 if (list.IsLinked(first, second) == true)
                 {
-                    list.GetLink(first, second).Edge.Length = length;
-                    list.GetLink(second, first).Edge.Length = length; //oriented
+                    list.GetLink(first, second).Length = length;
                 }
                 else
                 {

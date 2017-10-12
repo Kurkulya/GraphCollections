@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grpahs.Oriented;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Grpahs
     {
         static void Main(string[] args)
         {
-            GraphD graph = new GraphD();
+            GraphE_O graph = new GraphE_O();
             graph.AddVertex("K");
             graph.AddVertex("F");
             graph.AddVertex("D");
@@ -21,6 +22,7 @@ namespace Grpahs
             graph.AddEdge("D", "E", 3);
             graph.AddEdge("E", "S", 4);
             graph.AddEdge("S", "K", 5);
+            graph.AddEdge("F", "E", 6);
             graph.DelVertex("D");
             graph.Print();
         }

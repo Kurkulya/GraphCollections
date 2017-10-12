@@ -2,11 +2,16 @@
 using NUnit.Framework;
 using Grpahs;
 using Grpahs.Exceptions;
+using Grpahs.Oriented;
 
 namespace GraphTests
 {
     [TestFixture(typeof(GraphD))]
     [TestFixture(typeof(GraphM))]
+    [TestFixture(typeof(GraphE))]
+    [TestFixture(typeof(GraphD_O))]
+    [TestFixture(typeof(GraphM_O))]
+    [TestFixture(typeof(GraphE_O))]
     public class Tests<TGraph> where TGraph : IGraph, new()
     {
         IGraph graph;

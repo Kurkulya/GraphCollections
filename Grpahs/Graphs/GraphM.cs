@@ -117,7 +117,10 @@ namespace Grpahs
                     Console.Write($"{matrix[temp, link].Length} to {link.Name}, ");
 
                     if (visited.Contains(link) == false)
+                    {
+                        visited.Add(link);
                         queue.Enqueue(link);
+                    }
                 }
                 visited.Add(temp);
                 Console.WriteLine();
