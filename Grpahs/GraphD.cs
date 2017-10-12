@@ -1,104 +1,95 @@
-﻿using System;
+﻿using Grpahs.Exceptions;
+using Grpahs.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Grpahs.Structures.AdjacencyList;
 
 namespace Grpahs
 {
     public class GraphD : IGraph
     {
-        class Vertex
-        {
-            public string Name { get; set; }
-            public Vertex(string name)
-            {
-                Name = name;
-            }
-        }
+        AdjacencyList list = new AdjacencyList();
 
-        class Edge
-        {
-            public int Length { get; set; }
-            public Edge(int length)
-            {
-                Length = length;
-            }
-        }
+        public int Vertexes => list.GetVertexList().Count;
 
-        Dictionary<Vertex, Dictionary<Vertex, Edge>> graph = new Dictionary<Vertex, Dictionary<Vertex, Edge>>();
-
-        private Vertex GetVertexByName(string name)
-        {
-            return graph.FirstOrDefault(x => x.Key.Name == name).Key;
-        }
-        private Vertex GetLinkedVertexByName(string main, string link)
-        {
-            return graph[GetVertexByName(main)].FirstOrDefault(x => x.Key.Name == link).Key;
-        }
-
-        private bool IsLinked(string first, string second)
-        {
-            return graph[GetVertexByName(first)].FirstOrDefault(x => x.Key.Name == second).Key != null;
-        }
-
-        private void AddLinkedVertex(string first, string added, int length)
-        {
-            graph[GetVertexByName(first)].Add(new Vertex(added), new Edge(length));
-        }
-        private void DelLinkedVertex(string first, string del)
-        {
-            graph[GetVertexByName(first)].Remove(GetLinkedVertexByName(first,del));
-        }
-
-
+        public int Edges => list.NumOfEdges();
 
         public void AddEdge(string name1, string name2, int length)
         {
-            if (GetVertexByName(name1) != null && GetVertexByName(name2) != null)
+            if (list.Contains(name1) && list.Contains(name2))
             {
-                if (IsLinked(name1, name2) == false)
+                Vertex first = list.GetVertex(name1);
+                Vertex second = list.GetVertex(name2);
+
+                if (list.IsLinked(first, second) == false)
                 {
-                    AddLinkedVertex(name1, name2, length);
-                    AddLinkedVertex(name2, name1, length);
+                    Edge edge = new Edge(length);
+                    list.AddLink(first, second, edge);
+                    list.AddLink(second, first, edge);
                 }
+            }
+            else
+            {
+                throw new VertexDoesNotExistException();
             }
         }
 
         public void AddVertex(string name)
         {
-            if (graph.FirstOrDefault(x => x.Key.Name == name).Key == null)
-                graph.Add(new Vertex(name), new Dictionary<Vertex, Edge>());
+            if (list.Contains(name) == false)
+                list.Add(new Vertex(name));
         }
 
         public int DelEdge(string name1, string name2)
         {
             int delLength = 0;
-            if (GetVertexByName(name1) != null && GetVertexByName(name2) != null)
+            if (list.Contains(name1) && list.Contains(name2))
             {
-                if (IsLinked(name1, name2) == true)
+                Vertex first = list.GetVertex(name1);
+                Vertex second = list.GetVertex(name2);
+
+                if (list.IsLinked(first, second) == true)
+                {                   
+                    delLength = list.GetLink(first, second).Edge.Length;
+
+                    list.DelLink(first, second);
+                    list.DelLink(second, first);
+
+                    return delLength;
+                }
+                else
                 {
-                    delLength = GetEdge(name1, name2);
-                    DelLinkedVertex(name1, name2);
-                    DelLinkedVertex(name2, name1);
+                    throw new EdgeDoesNotExistException();
                 }
             }
-            return delLength;
+            else
+            {
+                throw new VertexDoesNotExistException();
+            }         
         }
 
 
         public void DelVertex(string name)
         {
-            if (GetVertexByName(name) != null)
+            if (list.Contains(name) == true)
             {
-                Vertex del = GetVertexByName(name);
-                List<Vertex> needDel = graph[del].Keys.ToList();
-                foreach (Vertex link in needDel)
+                Vertex del = list.GetVertex(name);
+                List<Link> needDel = list.GetLinks(del);
+                int len = needDel.Count;
+                for (int i =0;i < len; i++)
                 {
-                    DelLinkedVertex(link.Name, del.Name);
-                    DelLinkedVertex(del.Name, link.Name);
+                    list.DelLink(needDel.First().Vertex, del);
+                    list.DelLink(del, needDel.First().Vertex);
                 }
-                graph.Remove(GetVertexByName(del.Name));
+
+                list.Del(del);
+            }
+            else
+            {
+                throw new VertexDoesNotExistException();
             }
         }
 
@@ -106,21 +97,30 @@ namespace Grpahs
         {
             int length = 0;
 
-            if (GetVertexByName(name1) != null && GetVertexByName(name2) != null)
-                if (IsLinked(name1, name2) == true)
-                    length = graph[GetVertexByName(name1)].FirstOrDefault(x => x.Key.Name == name2).Value.Length;
+            if (list.Contains(name1) && list.Contains(name2))
+            {
+                Vertex first = list.GetVertex(name1);
+                Vertex second = list.GetVertex(name2);
 
-            return length;
+                if (list.IsLinked(first, second) == true)
+                    return length = list.GetLink(first, second).Edge.Length;
+                else
+                    throw new EdgeDoesNotExistException();
+            }
+            else
+            {
+                throw new VertexDoesNotExistException();
+            }            
         }
 
         public void Print()
         {
-            foreach(Vertex vertex in graph.Keys)
+            foreach(Vertex vertex in list.GetVertexList())
             {
                 Console.Write(vertex.Name + ": ");
-                foreach(Vertex lVertex in graph[vertex].Keys)
+                foreach(Link link in list.GetLinks(vertex))
                 {
-                    Console.Write($"{graph[vertex][lVertex].Length} to {lVertex.Name}, ");
+                    Console.Write($"{link.Edge.Length} to {link.Vertex.Name}, ");
                 }
                 Console.WriteLine();
             }
@@ -128,9 +128,25 @@ namespace Grpahs
 
         public void SetEdge(string name1, string name2, int length)
         {
-            if (GetVertexByName(name1) != null && GetVertexByName(name2) != null)
-                if (IsLinked(name1, name2) == true)
-                    graph[GetVertexByName(name1)].FirstOrDefault(x => x.Key.Name == name2).Value.Length = length;
+            if (list.Contains(name1) && list.Contains(name2))
+            {
+                Vertex first = list.GetVertex(name1);
+                Vertex second = list.GetVertex(name2);
+
+                if (list.IsLinked(first, second) == true)
+                {
+                    list.GetLink(first, second).Edge.Length = length;
+                    list.GetLink(second, first).Edge.Length = length;
+                }
+                else
+                {
+                    throw new EdgeDoesNotExistException();
+                }
+            }
+            else
+            {
+                throw new VertexDoesNotExistException();
+            }
         }
     }
 }

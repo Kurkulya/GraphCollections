@@ -42,10 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\EdgeDoesNotExistException.cs" />
+    <Compile Include="Exceptions\VertexDoesNotExistException.cs" />
+    <Compile Include="VertexEdge\Edge.cs" />
     <Compile Include="GraphD.cs" />
     <Compile Include="IGraph.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structures\AdjacencyList.cs" />
+    <Compile Include="VertexEdge\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
