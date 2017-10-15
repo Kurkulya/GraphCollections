@@ -76,7 +76,7 @@ namespace Grpahs.Structures
 
         public List<Vertex> GetVertexList()
         {
-            return vertexIndex;
+            return new List<Vertex>(vertexIndex);
         }
 
         public List<Vertex> GetLinks(Vertex fromVertex)

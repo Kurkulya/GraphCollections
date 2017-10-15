@@ -179,5 +179,78 @@ namespace Grpahs.Oriented
                 throw new VertexDoesNotExistException();
             }
         }
+
+
+        private Vertex GetMin(List<Vertex> unvis, Dictionary<Vertex, int> lengths, int max)
+        {
+            int min = max;
+            Vertex ret = null;
+            foreach (Vertex v in unvis)
+            {
+                if (lengths[v] <= min)
+                {
+                    ret = v;
+                    min = lengths[v];
+                }
+            }
+            return ret;
+        }
+
+        public List<string> GetShortestPath(string from, string to)
+        {
+            if (from == to)
+                return new List<string>();
+
+            const int MAX = 10000;
+            List<Vertex> unvisited = matrix.GetVertexList();
+            Dictionary<Vertex, int> lengths = new Dictionary<Vertex, int>();
+            Dictionary<Vertex, Vertex> path = new Dictionary<Vertex, Vertex>();
+
+
+
+            foreach (Vertex v in matrix.GetVertexList())
+            {
+                if (v == matrix.GetVertex(from))
+                    lengths.Add(v, 0);
+                else
+                    lengths.Add(v, MAX);
+            }
+
+            while (unvisited.Count != 0)
+            {
+                Vertex temp = GetMin(unvisited, lengths, MAX);
+
+                if (lengths[temp] == MAX)
+                    break;
+
+                unvisited.Remove(temp);
+
+                foreach (Vertex tempTo in matrix.GetLinks(temp))
+                {
+                    if (lengths[temp] + matrix[temp,tempTo].Length < lengths[tempTo])
+                    {
+                        lengths[tempTo] = lengths[temp] + matrix[temp, tempTo].Length;
+                        if (path.ContainsKey(tempTo))
+                            path[tempTo] = temp;
+                        else
+                            path.Add(tempTo, temp);
+                    }
+                }
+            }
+
+            List<string> finalPath = new List<string>();
+            Vertex source = matrix.GetVertex(to);
+            while (source != matrix.GetVertex(from))
+            {
+                finalPath.Add(source.Name);
+                if (path.ContainsKey(source) != false)
+                    source = path[source];
+                else
+                    throw new PathDoesNotExistException();
+            }
+            finalPath.Add(from);
+            finalPath.Reverse();
+            return finalPath;
+        }
     }
 }

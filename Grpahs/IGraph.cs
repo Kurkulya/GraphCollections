@@ -22,5 +22,7 @@ namespace Grpahs
         void Print();
         int GetEdge(string name1, string name2);
         void SetEdge(string name1, string name2, int length);
+
+        List<string> GetShortestPath(string from, string to);
     }
 }

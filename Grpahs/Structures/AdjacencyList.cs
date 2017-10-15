@@ -50,7 +50,7 @@ namespace Grpahs.Structures
 
         public List<Vertex> GetVertexList()
         {
-            return list;
+            return new List<Vertex>(list);
         }
 
         public void Add(Vertex vertex)

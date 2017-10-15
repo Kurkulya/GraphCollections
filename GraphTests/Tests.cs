@@ -349,5 +349,107 @@ namespace GraphTests
 
             Assert.AreEqual(1, graph.Edges);
         }
+
+
+
+        [TestCase("1","6",new string[] {"1","3","6"})]
+        [TestCase("1", "5", new string[] { "1", "3", "4","5" })]
+        [TestCase("1", "4", new string[] { "1", "3", "4" })]
+        [TestCase("1", "3", new string[] { "1", "3" })]
+        [TestCase("1", "2", new string[] { "1", "2"})]
+        [TestCase("2", "3", new string[] { "2", "3" })]
+        [TestCase("2", "4", new string[] { "2", "4"})]
+        [TestCase("2", "5", new string[] { "2", "4", "5" })]
+        [TestCase("2", "6", new string[] { "2", "3", "6" })]
+        [TestCase("3", "4", new string[] { "3", "4" })]
+        [TestCase("3", "5", new string[] { "3", "4","5" })]
+        [TestCase("3", "6", new string[] { "3", "6" })]
+        [TestCase("4", "5", new string[] { "4", "5"})]
+        [TestCase("4", "6", new string[] { "4", "5", "6" })]
+        [TestCase("5", "6", new string[] { "5", "6" })]
+        public void TestShortestPath(string from, string to, string[] result)
+        {
+            graph.AddVertex("1");
+            graph.AddVertex("2");
+            graph.AddVertex("3");
+            graph.AddVertex("4");
+            graph.AddVertex("5");
+            graph.AddVertex("6");
+            graph.AddEdge("1", "2", 7);
+            graph.AddEdge("2", "4", 15);
+            graph.AddEdge("2", "3", 10);
+            graph.AddEdge("1", "3", 9);
+            graph.AddEdge("1", "6", 14);
+            graph.AddEdge("3", "6", 2);
+            graph.AddEdge("3", "4", 11);
+            graph.AddEdge("4", "5", 6);
+            graph.AddEdge("5", "6", 9);
+
+            Assert.AreEqual(result.ToList(), graph.GetShortestPath(from, to));
+        }
+
+        [TestCase("1", "1")]
+        [TestCase("2", "2")]
+        [TestCase("3", "3")]
+        [TestCase("4", "4")]
+        [TestCase("5", "5")]
+        [TestCase("6", "6")]
+        public void TestShortestPath_Similar(string from, string to)
+        {
+            graph.AddVertex("1");
+            graph.AddVertex("2");
+            graph.AddVertex("3");
+            graph.AddVertex("4");
+            graph.AddVertex("5");
+            graph.AddVertex("6");
+            graph.AddEdge("1", "2", 7);
+            graph.AddEdge("2", "4", 15);
+            graph.AddEdge("2", "3", 10);
+            graph.AddEdge("1", "3", 9);
+            graph.AddEdge("1", "6", 14);
+            graph.AddEdge("3", "6", 2);
+            graph.AddEdge("3", "4", 11);
+            graph.AddEdge("4", "5", 6);
+            graph.AddEdge("5", "6", 9);
+
+            Assert.AreEqual(0, graph.GetShortestPath(from, to).Count);
+        }
+
+        [TestCase("6", "1")]
+        [TestCase("6", "2")]
+        [TestCase("6", "3")]
+        [TestCase("6", "4")]
+        [TestCase("6", "5")]
+        [TestCase("5", "1")]
+        [TestCase("5", "2")]
+        [TestCase("5", "3")]
+        [TestCase("5", "4")]
+        [TestCase("4", "1")]
+        [TestCase("4", "2")]
+        [TestCase("4", "3")]
+        [TestCase("3", "1")]
+        [TestCase("3", "2")]
+        [TestCase("2", "1")]
+        public void TestShortestPathEx(string from, string to)
+        {
+            graph.AddVertex("1");
+            graph.AddVertex("2");
+            graph.AddVertex("3");
+            graph.AddVertex("4");
+            graph.AddVertex("5");
+            graph.AddVertex("6");
+            graph.AddEdge("1", "2", 7);
+            graph.AddEdge("2", "4", 15);
+            graph.AddEdge("2", "3", 10);
+            graph.AddEdge("1", "3", 9);
+            graph.AddEdge("1", "6", 14);
+            graph.AddEdge("3", "6", 2);
+            graph.AddEdge("3", "4", 11);
+            graph.AddEdge("4", "5", 6);
+            graph.AddEdge("5", "6", 9);
+
+            var ex = Assert.Throws<PathDoesNotExistException>(() => graph.GetShortestPath(from, to));
+            Assert.AreEqual(typeof(PathDoesNotExistException), ex.GetType());
+        }
     }
 }

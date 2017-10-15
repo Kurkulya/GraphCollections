@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\PathDoesNotExistException.cs" />
     <Compile Include="Exceptions\EdgeDoesNotExistException.cs" />
     <Compile Include="Exceptions\VertexDoesNotExistException.cs" />
     <Compile Include="GraphsO\GraphD.cs" />

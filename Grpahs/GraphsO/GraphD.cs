@@ -139,6 +139,79 @@ namespace Grpahs.Oriented
                 throw new VertexDoesNotExistException();
         }
 
+
+        private Vertex GetMin(List<Vertex> unvis, Dictionary<Vertex, int> lengths, int max)
+        {
+            int min = max;
+            Vertex ret = null;
+            foreach(Vertex v in unvis)
+            {
+                if(lengths[v] <= min)
+                {
+                    ret = v;
+                    min = lengths[v];
+                }
+            }
+            return ret;
+        }
+
+        public List<string> GetShortestPath(string from, string to)
+        {
+            if (from == to)
+                return new List<string>();
+
+            const int MAX = 10000;
+            List<Vertex> unvisited = list.GetVertexList();
+            Dictionary<Vertex, int> lengths = new Dictionary<Vertex,int>();
+            Dictionary<Vertex,Vertex> path = new Dictionary<Vertex, Vertex>();
+
+
+
+            foreach(Vertex v in list.GetVertexList())
+            {
+                if(v == list.GetVertex(from))
+                    lengths.Add(v, 0);
+                else
+                    lengths.Add(v, MAX);
+            }
+
+            while(unvisited.Count != 0)
+            {
+                Vertex temp = GetMin(unvisited, lengths, MAX);
+
+                if (lengths[temp] == MAX)
+                    break;
+
+                unvisited.Remove(temp);
+
+                foreach(Edge edge in list.GetLinks(temp))
+                {
+                    if (lengths[temp] + edge.Length < lengths[edge.To])
+                    {
+                        lengths[edge.To] = lengths[temp] + edge.Length;
+                        if(path.ContainsKey(edge.To))
+                            path[edge.To] = temp;
+                        else
+                            path.Add(edge.To, temp);
+                    }
+                }
+            }
+
+            List<string> finalPath = new List<string>();
+            Vertex source = list.GetVertex(to);
+            while(source != list.GetVertex(from))
+            {
+                finalPath.Add(source.Name);
+                if (path.ContainsKey(source) != false)
+                    source = path[source];
+                else
+                    throw new PathDoesNotExistException();
+            }
+            finalPath.Add(from);
+            finalPath.Reverse();
+            return finalPath;
+        }
+
         public void Print()
         {
             List<Vertex> visited = new List<Vertex>();
@@ -189,5 +262,7 @@ namespace Grpahs.Oriented
                 throw new VertexDoesNotExistException();
             }
         }
+
+
     }
 }
