@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grpahs.Structures
 {
-    public class AdjacencyList
+    public class AdjacencyArray
     {
         public class Edge
         {
@@ -31,49 +31,57 @@ namespace Grpahs.Structures
             }
         }
 
-        List<Vertex> list;
+        int count;
+        Vertex[] array;
 
-        public AdjacencyList()
+        public AdjacencyArray()
         {
-            list = new List<Vertex>();
+            count = 0;
+            array = new Vertex[count];
         }
 
         public Vertex GetVertex(string name)
         {
-            return list.FirstOrDefault(x => x.Name == name);
+            return array.FirstOrDefault(x => x.Name == name);
         }
 
         public List<Edge> GetLinks(Vertex from)
         {
-            return list.Find(x => x == from).Edges;
+            return array.FirstOrDefault(x => x == from).Edges;
         }
 
         public List<Vertex> GetVertexList()
         {
-            return list;
+            return array.ToList();
         }
 
         public void Add(Vertex vertex)
         {
-            list.Add(vertex);
+            Vertex[] temp = new Vertex[++count];
+            for (int i = 0; i < count - 1; i++)
+            {
+                temp[i] = array[i];
+            }
+            temp[count - 1] = vertex;
+            array = temp;
         }
 
         public void AddLink(Vertex from, Edge edge)
         {
-            list.Find(x => x == from).Edges.Add(edge);
+            array.FirstOrDefault(x => x == from).Edges.Add(edge);
         }
 
         public void DelLink(Vertex from, Vertex del)
         {
-            list.Find(x => x == from).Edges.RemoveAll(x => x.To == del);
+            array.FirstOrDefault(x => x == from).Edges.RemoveAll(x => x.To == del);
         }
 
         public List<Vertex> GetInputLinks(Vertex v)
         {
             List<Vertex> input = new List<Vertex>();
-            foreach (Vertex vertex in list)
+            foreach (Vertex vertex in array)
             {
-                foreach(Edge edge in vertex.Edges)
+                foreach (Edge edge in vertex.Edges)
                 {
                     if (edge.To == v)
                         input.Add(vertex);
@@ -84,18 +92,27 @@ namespace Grpahs.Structures
 
         public void Del(Vertex del)
         {
-            list.Remove(del);
+            Vertex[] temp = new Vertex[--count];
+            int diff = 0;
+            for (int i = 0; i < count + 1; i++)
+            {
+                if (array[i] == del)
+                    diff = 1;
+                else
+                    temp[i - diff] = array[i];
+            }
+            array = temp;
         }
 
         public bool Contains(string name)
         {
-            return list.FirstOrDefault(x => x.Name == name) != null;
+            return array.FirstOrDefault(x => x.Name == name) != null;
         }
 
         public int NumOfEdges()
         {
             int count = 0;
-            foreach (Vertex vertex in list)
+            foreach (Vertex vertex in array)
             {
                 count += vertex.Edges.Count;
             }
@@ -107,10 +124,10 @@ namespace Grpahs.Structures
         {
             get
             {
-                if (list.FirstOrDefault(x => x == from) != null)
-                    return list.FirstOrDefault(x => x == from).Edges.FirstOrDefault(x => x.To == to);
+                if (array.FirstOrDefault(x => x == from) != null)
+                    return array.FirstOrDefault(x => x == from).Edges.FirstOrDefault(x => x.To == to);
                 else
-                    return null;                       
+                    return null;
             }
         }
     }

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Grpahs.Structures.AdjacencyList;
+using static Grpahs.Structures.AdjacencyMatrix;
 
-namespace Grpahs
+namespace Grpahs.Oriented
 {
     public class GraphM : IGraph
     {
@@ -28,7 +28,6 @@ namespace Grpahs
                 {
                     Edge edge = new Edge(length);
                     matrix[first, second] = edge;
-                    matrix[second, first] = edge; //oriented
                 }
             }
             else
@@ -56,7 +55,6 @@ namespace Grpahs
                     delLength = matrix[first, second].Length;
 
                     matrix[first, second] = null;
-                    matrix[second, first] = null; //oriented
 
                     return delLength;
                 }
@@ -96,6 +94,38 @@ namespace Grpahs
             {
                 throw new VertexDoesNotExistException();
             }            
+        }
+
+        public int GetInputEdgeCount(string name)
+        {
+            if (matrix.Contains(name) != false)
+                return matrix.GetInputLinks(matrix.GetVertex(name)).Count;
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public List<string> GetInputVertexNames(string name)
+        {
+            if (matrix.Contains(name) != false)
+                return matrix.GetInputLinks(matrix.GetVertex(name)).Select(x => x.Name).ToList();
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public int GetOutputEdgeCount(string name)
+        {
+            if (matrix.Contains(name) != false)
+                return matrix.GetLinks(matrix.GetVertex(name)).Count;
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public List<string> GetOutputVertexNames(string name)
+        {
+            if (matrix.Contains(name) != false)
+                return matrix.GetLinks(matrix.GetVertex(name)).Select(x => x.Name).ToList();
+            else
+                throw new VertexDoesNotExistException();
         }
 
         public void Print()
@@ -138,7 +168,6 @@ namespace Grpahs
                 if (matrix[first, second] != null)
                 {
                     matrix[first, second].Length = length;
-                    matrix[second, first].Length = length; //oriented
                 }
                 else
                 {

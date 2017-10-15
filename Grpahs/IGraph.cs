@@ -8,6 +8,11 @@ namespace Grpahs
 {
     public interface IGraph
     {
+        int GetInputEdgeCount(string name);
+        int GetOutputEdgeCount(string name);
+        List<string> GetInputVertexNames(string name);
+        List<string> GetOutputVertexNames(string name);
+
         int Vertexes { get; }
         int Edges { get; }
         void AddVertex(string name);

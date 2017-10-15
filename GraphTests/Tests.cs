@@ -3,15 +3,15 @@ using NUnit.Framework;
 using Grpahs;
 using Grpahs.Exceptions;
 using Grpahs.Oriented;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GraphTests
 {
+
     [TestFixture(typeof(GraphD))]
     [TestFixture(typeof(GraphM))]
-    [TestFixture(typeof(GraphE))]
-    [TestFixture(typeof(GraphD_O))]
-    [TestFixture(typeof(GraphM_O))]
-    [TestFixture(typeof(GraphE_O))]
+    [TestFixture(typeof(GraphH))]
     public class Tests<TGraph> where TGraph : IGraph, new()
     {
         IGraph graph;
@@ -34,6 +34,100 @@ namespace GraphTests
             }
             Assert.AreEqual(length, graph.Vertexes);
         }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(16)]
+        public void TestInputEdgeCount(int count)
+        {
+            graph.AddVertex("A");
+            for (int i = 0; i < count; i++)
+            {
+                graph.AddVertex("A" + i);
+                graph.AddEdge("A" + i, "A", 4);
+            }
+            Assert.AreEqual(count, graph.GetInputEdgeCount("A"));
+        }
+
+
+        [Test]
+        public void TestInputEdgeCountEx()
+        {
+            var ex = Assert.Throws<VertexDoesNotExistException>(() => graph.GetInputEdgeCount("A"));
+            Assert.AreEqual(typeof(VertexDoesNotExistException), ex.GetType());
+        }
+
+        [Test]
+        public void TestOutputEdgeCountEx()
+        {
+            var ex = Assert.Throws<VertexDoesNotExistException>(() => graph.GetOutputEdgeCount("A"));
+            Assert.AreEqual(typeof(VertexDoesNotExistException), ex.GetType());
+        }
+
+        [Test]
+        public void TestInputVertexNamesEx()
+        {
+            var ex = Assert.Throws<VertexDoesNotExistException>(() => graph.GetInputVertexNames("A"));
+            Assert.AreEqual(typeof(VertexDoesNotExistException), ex.GetType());
+        }
+
+        [Test]
+        public void TestOutputVertexNamesEx()
+        {
+            var ex = Assert.Throws<VertexDoesNotExistException>(() => graph.GetOutputVertexNames("A"));
+            Assert.AreEqual(typeof(VertexDoesNotExistException), ex.GetType());
+        }
+
+        [TestCase("A")]
+        [TestCase("A B")]
+        [TestCase("A B C D E")]
+        public void TestInputVertexNames(string names)
+        {                      
+            List<string> result = names.Split(' ').ToList();
+
+            graph.AddVertex("T");
+
+            foreach(string name in result)
+            {
+                graph.AddVertex(name);             
+                graph.AddEdge(name, "T", 4);
+            }
+            Assert.AreEqual(result, graph.GetInputVertexNames("T"));
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(16)]
+        public void TestOutputEdgeCount(int count)
+        {
+            graph.AddVertex("A");
+            for (int i = 0; i < count; i++)
+            {
+                graph.AddVertex("A" + i);
+                graph.AddEdge("A", "A" + i, 4);
+            }
+            Assert.AreEqual(count, graph.GetOutputEdgeCount("A"));
+        }
+
+        [TestCase("A")]
+        [TestCase("A B")]
+        [TestCase("A B C D E")]
+        public void TestOutputVertexNames(string names)
+        {
+            List<string> result = names.Split(' ').ToList();
+
+            graph.AddVertex("T");
+
+            foreach (string name in result)
+            {
+                graph.AddVertex(name);
+                graph.AddEdge("T", name, 4);
+            }
+            Assert.AreEqual(result, graph.GetOutputVertexNames("T"));
+        }
+
 
         [TestCase(0)]
         [TestCase(1)]

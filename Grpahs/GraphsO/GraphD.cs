@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using static Grpahs.Structures.AdjacencyList;
 
-namespace Grpahs
+namespace Grpahs.Oriented
 {
-    public class GraphE : IGraph
+    public class GraphD : IGraph
     {
-        EdgeList list = new EdgeList();
+        AdjacencyList list = new AdjacencyList();
 
-        public int Vertexes => list.Vertexes;
+        public int Vertexes => list.GetVertexList().Count;
 
-        public int Edges => list.Edges;
+        public int Edges => list.NumOfEdges();
 
         public void AddEdge(string name1, string name2, int length)
         {
@@ -24,10 +24,10 @@ namespace Grpahs
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
-                if (list.IsLinked(first,second) == false)
+                if (list[first, second] == null)
                 {
-                    Edge edge = new Edge(length);
-                    list.AddLink(first, second, edge);
+                    Edge edge = new Edge(second, length);
+                    list.AddLink(first, edge);
                 }
             }
             else
@@ -50,9 +50,9 @@ namespace Grpahs
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
-                if (list.IsLinked(first, second) == true)
-                {
-                    delLength = list.GetLink(first, second).Length;
+                if (list[first, second] != null)
+                {                   
+                    delLength = list[first, second].Length;
 
                     list.DelLink(first, second);
 
@@ -73,20 +73,31 @@ namespace Grpahs
         public void DelVertex(string name)
         {
             if (list.Contains(name) == true)
-                list.Del(list.GetVertex(name));
+            {
+                Vertex del = list.GetVertex(name);
+                foreach(Vertex vertex in list.GetInputLinks(del))
+                {
+                    list.DelLink(vertex, del);
+                }
+                list.Del(del);
+            }
             else
+            {
                 throw new VertexDoesNotExistException();
+            }
         }
 
         public int GetEdge(string name1, string name2)
         {
+            int length = 0;
+
             if (list.Contains(name1) && list.Contains(name2))
             {
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
-                if (list.IsLinked(first, second) == true)
-                    return list.GetLink(first, second).Length;
+                if (list[first, second] != null)
+                    return length = list[first, second].Length;
                 else
                     throw new EdgeDoesNotExistException();
             }
@@ -94,6 +105,38 @@ namespace Grpahs
             {
                 throw new VertexDoesNotExistException();
             }            
+        }
+
+        public int GetInputEdgeCount(string name)
+        {
+            if (list.Contains(name) != false)
+                return list.GetInputLinks(list.GetVertex(name)).Count;
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public List<string> GetInputVertexNames(string name)
+        {
+            if(list.Contains(name) != false)
+                return list.GetInputLinks(list.GetVertex(name)).Select(x => x.Name).ToList();
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public int GetOutputEdgeCount(string name)
+        {
+            if (list.Contains(name) != false)
+                return list.GetLinks(list.GetVertex(name)).Count;
+            else
+                throw new VertexDoesNotExistException();
+        }
+
+        public List<string> GetOutputVertexNames(string name)
+        {
+            if (list.Contains(name) != false)
+                return list.GetLinks(list.GetVertex(name)).Select(x => x.To.Name).ToList();
+            else
+                throw new VertexDoesNotExistException();
         }
 
         public void Print()
@@ -110,21 +153,20 @@ namespace Grpahs
 
                 Console.Write(temp.Name + ": ");
 
-                foreach (Vertex link in list.GetLinks(temp))
+                foreach (Edge edge in list.GetLinks(temp))
                 {
-                    Console.Write($"{list.GetLink(temp, link).Length} to {link.Name}, ");
+                    Console.Write($"{edge.Length} to {edge.To.Name}, ");
 
-                    if (visited.Contains(link) == false)
-                    { 
-                        visited.Add(link);
-                        queue.Enqueue(link);
+                    if (visited.Contains(edge.To) == false)
+                    {
+                        visited.Add(edge.To);
+                        queue.Enqueue(edge.To);
                     }
-            }
+                }
                 visited.Add(temp);
                 Console.WriteLine();
             }
         }
-
 
         public void SetEdge(string name1, string name2, int length)
         {
@@ -133,9 +175,9 @@ namespace Grpahs
                 Vertex first = list.GetVertex(name1);
                 Vertex second = list.GetVertex(name2);
 
-                if (list.IsLinked(first, second) == true)
+                if (list[first, second] != null)
                 {
-                    list.GetLink(first, second).Length = length;
+                    list[first, second].Length = length;
                 }
                 else
                 {

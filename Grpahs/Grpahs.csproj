@@ -44,21 +44,15 @@
   <ItemGroup>
     <Compile Include="Exceptions\EdgeDoesNotExistException.cs" />
     <Compile Include="Exceptions\VertexDoesNotExistException.cs" />
-    <Compile Include="GraphsO\GraphD_O.cs" />
-    <Compile Include="GraphsO\GraphE_O.cs" />
-    <Compile Include="GraphsO\GraphM_O.cs" />
-    <Compile Include="Graphs\GraphE.cs" />
-    <Compile Include="Graphs\GraphM.cs" />
+    <Compile Include="GraphsO\GraphD.cs" />
+    <Compile Include="GraphsO\GraphH.cs" />
+    <Compile Include="GraphsO\GraphM.cs" />
     <Compile Include="Structures\AdjacencyMatrix.cs" />
-    <Compile Include="Structures\EdgeList_O.cs" />
-    <Compile Include="Structures\EdgeList.cs" />
-    <Compile Include="VertexEdge\Edge.cs" />
-    <Compile Include="Graphs\GraphD.cs" />
+    <Compile Include="Structures\AdjacencyArray.cs" />
     <Compile Include="IGraph.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\AdjacencyList.cs" />
-    <Compile Include="VertexEdge\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

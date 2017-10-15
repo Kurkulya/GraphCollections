@@ -8,32 +8,30 @@ namespace Grpahs.Structures
 {
     public class AdjacencyMatrix
     {
-        public class Link
+        public class Vertex
         {
-            public Vertex Vertex { get; set; }
-            public Edge Edge { get; set; }
-            public Link(Vertex vertex, Edge edge)
+            public string Name { get; set; }
+            public Vertex(string name)
             {
-                Vertex = vertex;
-                Edge = edge;
+                Name = name;
             }
         }
+
+        public class Edge
+        {
+            public int Length { get; set; }
+            public Edge(int length)
+            {
+                Length = length;
+            }
+        }
+
+        int count;
+        List<Vertex> vertexIndex;
+        Edge[,] matrix;
+
 
         public int NumOfEdges()
-        {
-            int edges = 0;
-            for (int i = 0; i < count; i++)
-            {
-                for (int j = 0; j < count; j++)
-                {
-                    if (matrix[i, j] != null)
-                        edges++;
-                }
-            }
-            return edges / 2;
-        }
-
-        public int NumOfEdgesOriented()
         {
             int edges = 0;
             for (int i = 0; i < count; i++)
@@ -47,32 +45,38 @@ namespace Grpahs.Structures
             return edges;
         }
 
-        int count;
-        Dictionary<Vertex, int> vertexIndex;
-        Edge[,] matrix;
-
-
 
         public AdjacencyMatrix()
         {
             count = 0;
-            vertexIndex = new Dictionary<Vertex, int>();
+            vertexIndex = new List<Vertex>();
             matrix = new Edge[count, count];
         }
 
         public bool Contains(string name)
         {
-            return vertexIndex.FirstOrDefault(x => x.Key.Name == name).Key != null;
+            return vertexIndex.FirstOrDefault(x => x.Name == name) != null;
         }
 
         public Vertex GetVertex(string name)
         {
-            return vertexIndex.FirstOrDefault(x => x.Key.Name == name).Key;
+            return vertexIndex.FirstOrDefault(x => x.Name == name);
+        }
+
+        public List<Vertex> GetInputLinks(Vertex v)
+        {
+            List<Vertex> links = new List<Vertex>();
+            for (int i = 0; i < count; i++)
+            {
+                if (matrix[i, vertexIndex.IndexOf(v)] != null)
+                    links.Add(vertexIndex[i]);
+            }
+            return links;
         }
 
         public List<Vertex> GetVertexList()
         {
-            return vertexIndex.Keys.ToList();
+            return vertexIndex;
         }
 
         public List<Vertex> GetLinks(Vertex fromVertex)
@@ -80,15 +84,15 @@ namespace Grpahs.Structures
             List<Vertex> links = new List<Vertex>();
             for (int i = 0; i < count; i++)
             {
-                if (matrix[vertexIndex[fromVertex], i] != null)
-                    links.Add(vertexIndex.Keys.ElementAt(i));
+                if (matrix[vertexIndex.IndexOf(fromVertex), i] != null)
+                    links.Add(vertexIndex[i]);
             }
             return links;
         }
 
         public void Add(Vertex vertex)
         {
-            vertexIndex.Add(vertex, count);
+            vertexIndex.Add(vertex);
             ++count;
             Edge[,] temp = new Edge[count, count];
             for (int i = 0; i < count - 1; i++)
@@ -105,7 +109,7 @@ namespace Grpahs.Structures
         {           
             --count;
             Edge[,] temp = new Edge[count, count];
-            int diff = vertexIndex[vertex];
+            int diff = vertexIndex.IndexOf(vertex);
             for (int i = 0; i < count + 1; i++)
             {
                 for (int j = 0; j < count + 1; j++)
@@ -118,25 +122,18 @@ namespace Grpahs.Structures
                 }
             }
             matrix = temp;
-
-            int value = vertexIndex[vertex];
-            for(int i = value;i < vertexIndex.Count; i++)         
-            {
-                if (vertexIndex.ElementAt(i).Value > value)
-                    vertexIndex[vertexIndex.ElementAt(i).Key]--;
-            }
             vertexIndex.Remove(vertex);
         }
 
-        public Edge this[Vertex vertex1, Vertex vertex2]
+        public Edge this[Vertex from, Vertex to]
         {
             get
             {
-                return matrix[vertexIndex[vertex1], vertexIndex[vertex2]];
+                return matrix[vertexIndex.IndexOf(from), vertexIndex.IndexOf(to)];
             }
             set
             {
-                matrix[vertexIndex[vertex1], vertexIndex[vertex2]] = value;
+                matrix[vertexIndex.IndexOf(from), vertexIndex.IndexOf(to)] = value;
             }
         }
        

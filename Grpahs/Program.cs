@@ -11,7 +11,7 @@ namespace Grpahs
     {
         static void Main(string[] args)
         {
-            GraphE_O graph = new GraphE_O();
+            GraphH graph = new GraphH();
             graph.AddVertex("K");
             graph.AddVertex("F");
             graph.AddVertex("D");
