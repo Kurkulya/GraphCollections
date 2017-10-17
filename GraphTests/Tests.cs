@@ -352,101 +352,94 @@ namespace GraphTests
 
 
 
-        [TestCase("1","6",new string[] {"1","3","6"})]
-        [TestCase("1", "5", new string[] { "1", "3", "4","5" })]
-        [TestCase("1", "4", new string[] { "1", "3", "4" })]
-        [TestCase("1", "3", new string[] { "1", "3" })]
-        [TestCase("1", "2", new string[] { "1", "2"})]
-        [TestCase("2", "3", new string[] { "2", "3" })]
-        [TestCase("2", "4", new string[] { "2", "4"})]
-        [TestCase("2", "5", new string[] { "2", "4", "5" })]
-        [TestCase("2", "6", new string[] { "2", "3", "6" })]
-        [TestCase("3", "4", new string[] { "3", "4" })]
-        [TestCase("3", "5", new string[] { "3", "4","5" })]
-        [TestCase("3", "6", new string[] { "3", "6" })]
-        [TestCase("4", "5", new string[] { "4", "5"})]
-        [TestCase("4", "6", new string[] { "4", "5", "6" })]
-        [TestCase("5", "6", new string[] { "5", "6" })]
+        [TestCase("Днепр", "Киев", new string[] { "Днепр", "Кременчуг", "Киев" })]
+        [TestCase("Днепр", "Кременчуг", new string[] { "Днепр", "Кременчуг" })]
+        [TestCase("Днепр", "Полтава", new string[] { "Днепр", "Полтава" })]
+        [TestCase("Киев", "Днепр", new string[] { "Киев", "Кременчуг","Днепр" })]
+        [TestCase("Киев", "Кременчуг", new string[] { "Киев", "Кременчуг" })]
+        [TestCase("Киев", "Полтава", new string[] { "Киев", "Полтава" })]
+        [TestCase("Кременчуг", "Киев", new string[] { "Кременчуг", "Киев" })]
+        [TestCase("Кременчуг", "Днепр", new string[] { "Кременчуг", "Днепр" })]
+        [TestCase("Кременчуг", "Полтава", new string[] { "Кременчуг", "Полтава" })]
+        [TestCase("Полтава", "Киев", new string[] { "Полтава", "Киев" })]
+        [TestCase("Полтава", "Кременчуг", new string[] { "Полтава", "Кременчуг" })]
+        [TestCase("Полтава", "Днепр", new string[] { "Полтава", "Днепр" })]
         public void TestShortestPath(string from, string to, string[] result)
         {
-            graph.AddVertex("1");
-            graph.AddVertex("2");
-            graph.AddVertex("3");
-            graph.AddVertex("4");
-            graph.AddVertex("5");
-            graph.AddVertex("6");
-            graph.AddEdge("1", "2", 7);
-            graph.AddEdge("2", "4", 15);
-            graph.AddEdge("2", "3", 10);
-            graph.AddEdge("1", "3", 9);
-            graph.AddEdge("1", "6", 14);
-            graph.AddEdge("3", "6", 2);
-            graph.AddEdge("3", "4", 11);
-            graph.AddEdge("4", "5", 6);
-            graph.AddEdge("5", "6", 9);
+            graph.AddVertex("Днепр");
+            graph.AddVertex("Киев");
+            graph.AddVertex("Кременчуг");
+            graph.AddVertex("Полтава");
+            graph.AddEdge("Днепр", "Киев", 453);
+            graph.AddEdge("Днепр", "Кременчуг", 161);
+            graph.AddEdge("Днепр", "Полтава", 202);
+            graph.AddEdge("Киев", "Днепр", 491);
+            graph.AddEdge("Киев", "Кременчуг", 292);
+            graph.AddEdge("Киев", "Полтава", 343);
+            graph.AddEdge("Полтава", "Киев", 341);
+            graph.AddEdge("Полтава", "Кременчуг", 113);
+            graph.AddEdge("Полтава", "Днепр", 182);
+            graph.AddEdge("Кременчуг", "Киев", 291);
+            graph.AddEdge("Кременчуг", "Днепр", 161);
+            graph.AddEdge("Кременчуг", "Полтава", 113);
+
 
             Assert.AreEqual(result.ToList(), graph.GetShortestPath(from, to));
         }
 
-        [TestCase("1", "1")]
-        [TestCase("2", "2")]
-        [TestCase("3", "3")]
-        [TestCase("4", "4")]
-        [TestCase("5", "5")]
-        [TestCase("6", "6")]
+        [TestCase("Кременчуг", "Кременчуг")]
+        [TestCase("Полтава", "Полтава")]
+        [TestCase("Днепр", "Днепр")]
+        [TestCase("Киев", "Киев")]
         public void TestShortestPath_Similar(string from, string to)
         {
-            graph.AddVertex("1");
-            graph.AddVertex("2");
-            graph.AddVertex("3");
-            graph.AddVertex("4");
-            graph.AddVertex("5");
-            graph.AddVertex("6");
-            graph.AddEdge("1", "2", 7);
-            graph.AddEdge("2", "4", 15);
-            graph.AddEdge("2", "3", 10);
-            graph.AddEdge("1", "3", 9);
-            graph.AddEdge("1", "6", 14);
-            graph.AddEdge("3", "6", 2);
-            graph.AddEdge("3", "4", 11);
-            graph.AddEdge("4", "5", 6);
-            graph.AddEdge("5", "6", 9);
+            graph.AddVertex("Днепр");
+            graph.AddVertex("Киев");
+            graph.AddVertex("Кременчуг");
+            graph.AddVertex("Полтава");
+            graph.AddEdge("Днепр", "Киев", 453);
+            graph.AddEdge("Днепр", "Кременчуг", 161);
+            graph.AddEdge("Днепр", "Полтава", 202);
+            graph.AddEdge("Киев", "Днепр", 491);
+            graph.AddEdge("Киев", "Кременчуг", 292);
+            graph.AddEdge("Киев", "Полтава", 343);
+            graph.AddEdge("Полтава", "Киев", 341);
+            graph.AddEdge("Полтава", "Кременчуг", 113);
+            graph.AddEdge("Полтава", "Днепр", 182);
+            graph.AddEdge("Кременчуг", "Киев", 291);
+            graph.AddEdge("Кременчуг", "Днепр", 161);
+            graph.AddEdge("Кременчуг", "Полтава", 113);
 
             Assert.AreEqual(0, graph.GetShortestPath(from, to).Count);
         }
 
-        [TestCase("6", "1")]
-        [TestCase("6", "2")]
-        [TestCase("6", "3")]
-        [TestCase("6", "4")]
-        [TestCase("6", "5")]
-        [TestCase("5", "1")]
-        [TestCase("5", "2")]
-        [TestCase("5", "3")]
-        [TestCase("5", "4")]
-        [TestCase("4", "1")]
-        [TestCase("4", "2")]
-        [TestCase("4", "3")]
-        [TestCase("3", "1")]
-        [TestCase("3", "2")]
-        [TestCase("2", "1")]
+        [TestCase("Париж", "Днепр")]
+        [TestCase("Париж", "Киев")]
+        [TestCase("Париж", "Полтава")]
+        [TestCase("Париж", "Кременчуг")]
+        [TestCase("Днепр", "Париж")]
+        [TestCase("Киев", "Париж")]
+        [TestCase("Полтава", "Париж")]
+        [TestCase("Кременчуг", "Париж")]
         public void TestShortestPathEx(string from, string to)
         {
-            graph.AddVertex("1");
-            graph.AddVertex("2");
-            graph.AddVertex("3");
-            graph.AddVertex("4");
-            graph.AddVertex("5");
-            graph.AddVertex("6");
-            graph.AddEdge("1", "2", 7);
-            graph.AddEdge("2", "4", 15);
-            graph.AddEdge("2", "3", 10);
-            graph.AddEdge("1", "3", 9);
-            graph.AddEdge("1", "6", 14);
-            graph.AddEdge("3", "6", 2);
-            graph.AddEdge("3", "4", 11);
-            graph.AddEdge("4", "5", 6);
-            graph.AddEdge("5", "6", 9);
+            graph.AddVertex("Днепр");
+            graph.AddVertex("Киев");
+            graph.AddVertex("Кременчуг");
+            graph.AddVertex("Полтава");
+            graph.AddVertex("Париж");
+            graph.AddEdge("Днепр", "Киев", 453);
+            graph.AddEdge("Днепр", "Кременчуг", 161);
+            graph.AddEdge("Днепр", "Полтава", 202);
+            graph.AddEdge("Киев", "Днепр", 491);
+            graph.AddEdge("Киев", "Кременчуг", 292);
+            graph.AddEdge("Киев", "Полтава", 343);
+            graph.AddEdge("Полтава", "Киев", 341);
+            graph.AddEdge("Полтава", "Кременчуг", 113);
+            graph.AddEdge("Полтава", "Днепр", 182);
+            graph.AddEdge("Кременчуг", "Киев", 291);
+            graph.AddEdge("Кременчуг", "Днепр", 161);
+            graph.AddEdge("Кременчуг", "Полтава", 113);
 
             var ex = Assert.Throws<PathDoesNotExistException>(() => graph.GetShortestPath(from, to));
             Assert.AreEqual(typeof(PathDoesNotExistException), ex.GetType());
